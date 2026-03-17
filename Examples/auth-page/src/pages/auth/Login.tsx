@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useRef } from "react"
 import { Container } from "react-bootstrap"
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import Cookies from 'universal-cookie';
 
 
@@ -9,6 +11,8 @@ const Login = () => {
 
     const usernameRef = useRef<HTMLInputElement | null>(null);
     const passRef = useRef<HTMLInputElement | null>(null);
+
+    const navigate = useNavigate();
 
     const loginFormHandle = (e: React.FormEvent) => {
         e.preventDefault();
@@ -19,8 +23,21 @@ const Login = () => {
         }).then(res => {
 
             if (res.status == 200) {
-                console.log(res.data)
-                cookies.set("token", res.data.accessToken)
+                cookies.set("AccessToken", res.data.accessToken, {
+                    path: '/',
+                    maxAge: 60 * 15
+                })
+                cookies.set("RefreshToken", res.data.refreshToken, {
+                    path: '/',
+                    maxAge: 60 * 60 * 24 * 7
+                })
+                Swal.fire({
+                    icon: "success",
+                    title: "Login successfull",
+                    confirmButtonText: "OK"
+                }).then(() => {
+                    navigate(`/account/${res.data.id}`)
+                })
             } else {
                 alert("Email or pass is wrong");
 
