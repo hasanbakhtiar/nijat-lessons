@@ -47,11 +47,11 @@ const PrivateRoute = () => {
             .then(res => {
                 const { accessToken, refreshToken: newRefreshToken } = res.data;
 
-                cookies.set('accessToken', accessToken, {
+                cookies.set('AccessToken', accessToken, {
                     path: '/',
                     maxAge: 60 * 15,
                 });
-                cookies.set('refreshToken', newRefreshToken, {
+                cookies.set('RefreshToken', newRefreshToken, {
                     path: '/',
                     maxAge: 60 * 60 * 24 * 7,
                 });
@@ -59,8 +59,8 @@ const PrivateRoute = () => {
                 setAuthMe(true);
             })
             .catch(() => {
-                cookies.remove('accessToken');
-                cookies.remove('refreshToken');
+                cookies.remove('AccessToken');
+                cookies.remove('RefreshToken');
                 setAuthMe(false);
             });
     };
